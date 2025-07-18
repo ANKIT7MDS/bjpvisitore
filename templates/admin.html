@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin Dashboard</title></head>
+<body style="background-color: #fff3e0; color: black; padding: 20px;">
+    <h2>Visitor Entries</h2>
+    <table border="1" cellpadding="10">
+        <tr><th>नाम</th><th>मोबाइल</th><th>पद</th><th>बूथ</th><th>मंडल</th><th>कारण</th><th>In Time</th><th>Out Time</th><th>Mark Out</th></tr>
+        {% for e in entries %}
+        <tr>
+            <td>{{e[2]}}</td><td>{{e[1]}}</td><td>{{e[3]}}</td><td>{{e[4]}}</td><td>{{e[5]}}</td><td>{{e[6]}}</td><td>{{e[7]}}</td><td>{{e[8]}}</td>
+            <td><a href="/mark_out/{{e[0]}}">Mark Out</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visitor Entry</title>
+    <style>
+        body { background-color: #ff9933; font-family: sans-serif; padding: 20px; color: white; }
+        input, textarea, button { display: block; margin: 10px 0; padding: 10px; width: 100%; }
+    </style>
+</head>
+<body>
+    <h2>भाजपा कार्यालय विज़िटर एंट्री</h2>
+    <form method="post">
+        <input type="text" name="mobile" placeholder="मोबाइल नंबर" required>
+        <input type="text" name="name" placeholder="नाम" required>
+        <input type="text" name="post" placeholder="पद" required>
+        <input type="text" name="booth" placeholder="बूथ नंबर" required>
+        <input type="text" name="mandal" placeholder="मंडल का नाम" required>
+        <textarea name="reason" placeholder="आने का कारण" required></textarea>
+        <input type="hidden" name="photo" id="photo">
+        <video id="video" width="300" autoplay></video>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <button type="button" onclick="takePhoto()">फोटो खींचें</button>
+        <button type="submit">सबमिट करें</button>
+    </form>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const photoInput = document.getElementById('photo');
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+            .then(stream => { video.srcObject = stream; });
+
+        function takePhoto() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            photoInput.value = canvas.toDataURL('image/png');
+            alert("फोटो कैप्चर हो गई है!");
+        }
+    </script>
+</body>
+</html>
