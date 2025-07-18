@@ -3,39 +3,77 @@
 <head>
     <title>Visitor Entry</title>
     <style>
-        body { background-color: #ff9933; font-family: sans-serif; padding: 20px; color: white; }
-        input, textarea, button { display: block; margin: 10px 0; padding: 10px; width: 100%; }
+        body {
+            background-color: #ff9933;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        input, button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        video { width: 100%; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h2>भाजपा कार्यालय विज़िटर एंट्री</h2>
+<div class="form-container">
     <form method="post">
-        <input type="text" name="mobile" placeholder="मोबाइल नंबर" required>
-        <input type="text" name="name" placeholder="नाम" required>
-        <input type="text" name="post" placeholder="पद" required>
-        <input type="text" name="booth" placeholder="बूथ नंबर" required>
-        <input type="text" name="mandal" placeholder="मंडल का नाम" required>
-        <textarea name="reason" placeholder="आने का कारण" required></textarea>
+        <input type="text" name="mobile" id="mobile" placeholder="मोबाइल नंबर" required onblur="fetchInfo()">
+        <input type="text" name="name" id="name" placeholder="नाम" required>
+        <input type="text" name="post" id="post" placeholder="पद" required>
+        <input type="text" name="booth" id="booth" placeholder="बूथ नंबर" required>
         <input type="hidden" name="photo" id="photo">
-        <video id="video" width="300" autoplay></video>
+        <video id="video" autoplay></video>
         <canvas id="canvas" style="display:none;"></canvas>
         <button type="button" onclick="takePhoto()">फोटो खींचें</button>
         <button type="submit">सबमिट करें</button>
     </form>
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const photoInput = document.getElementById('photo');
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-            .then(stream => { video.srcObject = stream; });
+</div>
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const photoInput = document.getElementById('photo');
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+        .then(stream => { video.srcObject = stream; });
 
-        function takePhoto() {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            photoInput.value = canvas.toDataURL('image/png');
-            alert("फोटो कैप्चर हो गई है!");
-        }
-    </script>
+    function takePhoto() {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        photoInput.value = canvas.toDataURL('image/png');
+        alert("फोटो कैप्चर हो गई है!");
+    }
+
+    function fetchInfo() {
+        const mobile = document.getElementById('mobile').value;
+        fetch('/get_info/' + mobile)
+            .then(res => res.json())
+            .then(data => {
+                if (data.name) {
+                    document.getElementById('name').value = data.name;
+                    document.getElementById('post').value = data.post;
+                    document.getElementById('booth').value = data.booth;
+                } else {
+                    document.getElementById('name').value = '';
+                    document.getElementById('post').value = '';
+                    document.getElementById('booth').value = '';
+                }
+            });
+    }
+</script>
 </body>
 </html>
